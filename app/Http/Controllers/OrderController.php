@@ -55,8 +55,15 @@ class OrderController extends Controller
     public function getProduct(){
 
        $client_id=Input::get("client_id");
-       $productList=Product::where('fk_client_id','=',$client_id)->get();
-       return \Response::json($productList);
+       if($client_id==0){
+            $productList=Product::all();
+            return \Response::json($productList);
+       }
+       else{
+            $productList=Product::where('fk_client_id','=',$client_id)->get();
+            return \Response::json($productList);
+       }
+       
 
     }
 

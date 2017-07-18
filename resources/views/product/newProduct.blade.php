@@ -5,7 +5,7 @@
     <div class="row">
 		<section class="content">
 		  <div class="box">
-		 	new product
+		 	new product hahaha
 
 
 
