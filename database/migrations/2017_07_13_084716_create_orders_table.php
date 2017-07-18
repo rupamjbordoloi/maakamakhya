@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_id')->unique();
+            $table->date('order_date');
             $table->integer('fk_client_id')->unsigned()->nullable();
             $table->foreign('fk_client_id')->references('id')->on('clients');
             $table->integer('fk_product_id')->unsigned();
@@ -25,6 +26,8 @@ class CreateOrdersTable extends Migration
             $table->integer('balance_estimate')->default(0);
             $table->integer('balance_sq_feets')->default(0);
             $table->string('approval');
+            $table->integer('fk_user_created_id')->unsigned();
+            $table->foreign('fk_user_created_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

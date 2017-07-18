@@ -38,7 +38,8 @@
 	                	@role('admin')
 	                	@if($order->approval==1) 
 	                			Approved
-	                	@elseif($order->approval==2)<a href="/approve/{{$order->id}}" class="btn btn-primary">Approve</a>		
+	                	@elseif($order->approval==2)<a href="/approve/{{$order->id}}" class="btn btn-primary">Approve</a>
+	                	@else Not yet send for approval		
 	                	@endif	
 	                	@endrole
 	                	@role('manager')

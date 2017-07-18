@@ -179,7 +179,7 @@ class OrderController extends Controller
                     else{
                         $newOrder->approval=0;
                     }
-                    $newOrder->balance_estimate='20';
+                    $newOrder->fk_user_created_id=Auth::user()->id;
                     $newOrder->save();
                 }
                  
