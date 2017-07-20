@@ -45,6 +45,14 @@
             </span>
           </a>  
         </li>
+        <li class="{{ Request::is('allTaxes') ? 'active' : '' }} treeview">
+          <a href="/allTaxes">
+            <i class="fa fa-edit"></i> <span>Taxes</span>
+            <span class="pull-right-container">
+              <i class="fa {{ Request::is('allTaxes') ? 'fa-angle-right' : 'fa-angle-left' }} pull-right"></i>
+            </span>
+          </a>  
+        </li>
         @role('admin')
         <li class="{{ Request::is('Register') ? 'active' : '' }} treeview">
           <a href="/Register">
@@ -55,6 +63,7 @@
           </a>  
         </li>
         @endrole
+        
         
         <li class="treeview">
           <li class="treeview">

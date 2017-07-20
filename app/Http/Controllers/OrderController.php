@@ -11,6 +11,7 @@ use App\Product;
 use App\User;
 use Entrust;
 use DB;
+use App\Tax;
 use Illuminate\Support\Facades\Input;
 
 class OrderController extends Controller
@@ -34,7 +35,8 @@ class OrderController extends Controller
         
         $clients=Client::all();
         $products=Product::all();
-        return view('order.newOrder',array('user' => Auth::user(), 'clients' => $clients, 'products' => $products));
+        $taxes=Tax::all();
+        return view('order.newOrder',array('user' => Auth::user(), 'clients' => $clients, 'products' => $products, 'taxes'=> $taxes));
     }
 
      public function allOrders()
@@ -63,6 +65,17 @@ class OrderController extends Controller
             $productList=Product::where('fk_client_id','=',$client_id)->get();
             return \Response::json($productList);
        }
+       
+
+    }
+
+    public function getTax(){
+
+       $tax_id=Input::get("tax_id");
+       
+            $percent=Tax::where('id','=',$tax_id)->get(['percent']);
+            return \Response::json($percent);
+       
        
 
     }
@@ -148,21 +161,23 @@ class OrderController extends Controller
     {
             
                 $orders=$request['order'];
-                $newOrder=new Order;                
+
+                $lastId=Order::all();
+                if($lastId->isEmpty()){
+
+                    $orderNo=1;
+                }
+                else{
+                    $orderNo=$lastId->last()->id;
+                    $orderNo=$orderNo+1;
+                    
+                }
+                                
                            
                 foreach($orders as $order){
                     $newOrder=new Order;
-                    $lastId=Order::all();
-                    if($lastId->isEmpty()){
-
-                        $newOrder->order_id="MK-001";
-                    }
-                    else{
-                        $orderNo=$lastId->last()->id;
-                        $orderNo=$orderNo+1;
-                        $newOrder->order_id="MK-00".$orderNo;
-                    }
-                   
+                    
+                   $newOrder->order_id="MK-00".$orderNo;
                     if($order['0']==0){
                         $newOrder->fk_client_id=null;
                     }
@@ -172,6 +187,7 @@ class OrderController extends Controller
                     
                     $newOrder->fk_product_id=$order['1'];
                     $newOrder->sq_feets=$order['2'];
+                    $newOrder->fk_tax_id=1;
                     $newOrder->estimated_rate=$order['3']*$order['2'];
                     if(Auth::user()->hasRole('admin')){
                         $newOrder->approval=1;

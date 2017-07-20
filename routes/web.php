@@ -29,6 +29,7 @@ Route::get('/allOrders', 'OrderController@allOrders');
 Route::get('/getProduct', 'OrderController@getProduct');
 Route::get('/getAllProduct', 'OrderController@getAllProduct');
 Route::get('/getSqFeetRate', 'OrderController@getSqFeetRate');
+Route::get('/getTax', 'OrderController@getTax');
 Route::get('/store', 'OrderController@store');
 Route::get('/getApproved/{id}', 'OrderController@getApproved');
 Route::get('/approve/{id}', 'OrderController@approve');
@@ -55,3 +56,4 @@ Route::get('/allProducts/filter', 'ProductController@filter');
 
 Route::resource('Register', 'RegisterController');
 
+Route::resource('allTaxes', 'TaxController');

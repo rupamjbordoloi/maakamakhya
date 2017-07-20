@@ -15,13 +15,15 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('order_id')->unique();
+            $table->string('order_id');
             $table->date('order_date');
             $table->integer('fk_client_id')->unsigned()->nullable();
             $table->foreign('fk_client_id')->references('id')->on('clients');
             $table->integer('fk_product_id')->unsigned();
             $table->foreign('fk_product_id')->references('id')->on('products');
             $table->integer('sq_feets');
+            $table->integer('fk_tax_id')->unsigned();
+            $table->foreign('fk_tax_id')->references('id')->on('taxes');
             $table->integer('estimated_rate');
             $table->integer('balance_estimate')->default(0);
             $table->integer('balance_sq_feets')->default(0);
