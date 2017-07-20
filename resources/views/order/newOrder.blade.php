@@ -156,15 +156,6 @@
 <script>
 
 
-	function new_client(){
-
-
-		x=prompt("Enter Client Name");
-		alert(x);
-
-	}
-
-
 
 	$("#tax").on('change',function(e){
 		var tax_id=e.target.value;
@@ -176,9 +167,9 @@
 				tax=percentList.percent;
 
 				var sq = $('#sq_feet').val();
-		    	var r=parseInt(rate);
-		    	var di=parseInt(sq);
-		    	var t=parseInt(tax);
+		    	var r=parseFloat(rate);
+		    	var di=parseFloat(sq);
+		    	var t=parseFloat(tax);
 		    	var x=sq*r*(t)/100;
 		   		$('#sq_feet_rate').val(r+x);
 
@@ -207,9 +198,9 @@
 		$('#myTable').find('tr').click( function(){
 		  
 		  var sf=$(this).find('td:nth-child(3) input').val();
-		  var s=parseInt(sf);
-		  var r=parseInt(rate);
-		  var t=parseInt(tax);
+		  var s=parseFloat(sf);
+		  var r=parseFloat(rate);
+		  var t=parseFloat(tax);
 		  var x=s*r*(t)/100;
 		 
 		  $(this).find('td:nth-child(6)').text(r+x);
