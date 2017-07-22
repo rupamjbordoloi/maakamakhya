@@ -41,14 +41,14 @@
         <header class="main-header">
 
             <!-- Logo -->
-            <a href="/home" class="logo">
+            <a href="/home" class="logo" id="logo">
                 <b>Maa Kamakhya</b>
             </a>
 
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <a href="#" class="sidebar-toggle"  onClick="toggleText();" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
                 <!-- Navbar Right Menu -->
@@ -155,6 +155,15 @@
         </div>
     </div>
     @endif
+    <script type="text/javascript">
+        function toggleText(){
+            var x=$("#logo").text().trim();
+            if(x==="Maa Kamakhya")
+                $("#logo").text("MK");
+            else
+                $("#logo").text("Maa Kamakhya");
+        }
+    </script>
 
     <!-- jQuery 3.1.1 -->
     

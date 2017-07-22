@@ -17,10 +17,9 @@
 	                <tr>
 	                  <th>Order No.</th>
 	                  <th>Name</th>
-	                  <th>Client Name</th>
 	                  <th>Sq. feet</th>
 	                  <th>Total Price</th>
-	                  <th>Created At</th>
+	                  <th>Date</th>
 	                  <th>Approval</th>
 	                  <th></th>
 	                </tr>
@@ -28,25 +27,24 @@
 	                <tbody>
 	                @foreach($orders as $order)
 	                <tr>
-	                	<td><a href="/orderDetail/{{$order->id}}">{{$order->order_id}}</a></td>
+	                	<td><a href="/orderBill/{{$order->order_id}}">{{$order->order_id}}</a></td>
 	                	<td><a href="/filterByClient/{{$order->fk_client_id}}">{{$order->client['name']}}</a></td>
-	                	<td>{{$order->product['name']}}</td>
 	                	<td>{{$order->sq_feets}}</td>
 	                	<td>{{$order->estimated_rate}}</td>
-	                	<td>{{$order->created_at}}</td>
+	                	<td>{{$order->order_date}}</td>
 	                	<td>
 	                	@role('admin')
 	                	@if($order->approval==1) 
 	                			Approved
-	                	@elseif($order->approval==2)<a href="/approve/{{$order->id}}" class="btn btn-primary">Approve</a>
+	                	@elseif($order->approval==2)<a href="/approve/{{$order->order_id}}" class="btn btn-primary">Approve</a>
 	                	@else Not yet send for approval		
 	                	@endif	
 	                	@endrole
 	                	@role('manager')
 	                		@if($order->approval==1) 
 	                			Approved	
-	                		@elseif($order->approval==2)<a href="/getApproved/{{$order->id}}" class="btn btn-primary">Send for approval</a>
-	                		@else <a href="/getApproved/{{$order->id}}" class="btn btn-primary">Not yet send for approval</a>
+	                		@elseif($order->approval==2)<a href="/getApproved/{{$order->order_id}}" class="btn btn-primary">Send for approval</a>
+	                		@else <a href="/getApproved/{{$order->order_id}}" class="btn btn-primary">Not yet send for approval</a>
 	                		@endif
 	                	@endrole
 

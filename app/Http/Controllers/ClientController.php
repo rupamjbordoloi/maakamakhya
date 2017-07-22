@@ -8,6 +8,8 @@ use Auth;
 use App\Industry;
 use App\User;
 use App\Client;
+use App\Product;
+use App\Tax;
 
 class ClientController extends Controller
 {
@@ -29,7 +31,7 @@ class ClientController extends Controller
 
      public function allClients()
     {
-        $client=Client::paginate(2);
+        $client=Client::paginate(4);
         return view('client.allClients',array('user' => Auth::user(), 'clients' => $client));
     }
 
@@ -110,6 +112,68 @@ class ClientController extends Controller
 
             }
     }
+
+
+     public function newClientAdd(Request $request)
+    {
+       
+        $industries=Industry::all();
+        $users=User::all();
+        $clients=Client::all();
+        $products=Product::all();
+        $taxes=Tax::all();
+
+        $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'vat' => 'required|integer',
+                'companyName' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:clients',
+                'address' => 'required|string|max:255',
+                'zipCode' => 'required|integer',
+                'city' => 'required|string|max:255',
+                'saddress' => 'required|string|max:255',
+                'szipCode' => 'required|integer',
+                'scity' => 'required|string|max:255',
+                'primaryNo' => 'required|integer',
+                'secondaryNo' => 'required|integer',
+                'companyType' => 'required|string|max:255',
+                'industry' => 'required|integer',
+                'assignUser' => 'required|integer', 
+                ]);
+
+        if ($validator->fails()) {
+            
+            return redirect()->to($this->getRedirectUrl())
+                    ->withInput()
+                    ->withErrors($validator, $this->errorBag())
+                    ->with('failedMessage', 'Fill the form correctly!');
+            } 
+
+
+        else{
+                $newClient=new Client;
+                $newClient->name=$request->name;
+                $newClient->vat=$request->vat;
+                $newClient->company_name=$request->companyName;
+                $newClient->email=$request->email;
+                $newClient->address=$request->address;
+                $newClient->zipcode=$request->zipCode;
+                $newClient->city=$request->city;
+                $newClient->saddress=$request->saddress;
+                $newClient->szipcode=$request->szipCode;
+                $newClient->scity=$request->scity;
+                $newClient->primary_number=$request->primaryNo;
+                $newClient->secondary_number=$request->secondaryNo;
+                $newClient->company_type=$request->companyType;
+                $newClient->industry_id=$request->industry;
+                $newClient->fk_user_id=$request->assignUser;
+                $newClient->save();
+                return redirect()->action('OrderController@newOrder');
+                //return view('order.newOrder',array('user' => Auth::user(), 'clients' => $clients, 'products' => $products, 'taxes'=> $taxes,'industries'=>$industries,'users'=>$users));
+
+            }
+    }
+
 
     /**
      * Display the specified resource.

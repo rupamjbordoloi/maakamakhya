@@ -58,7 +58,10 @@
 						      <option value="{{$client->id}}">{{$client->name}}</option>
 						      @endforeach
 						      </select>
-						      <button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal">Add new client+</button>
+						      <a href="/newClient" target="_blank">
+						      	New Client+
+						      </a>
+						      <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
 				    	    </div>
 
 				    	    <div class="form-group">
@@ -151,20 +154,23 @@
 	</section><!--section close-->   
 </div><!--container close-->
 
+<!--modal-->
 <div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Add Client</h4>
-      </div>
-    		<form method="post" action="/newClientAdd">
+ <div class="modal-dialog">
+ <div class="modal-content"
+<div class="container">
+    <div class="row">
+		<section class="content">
+		 <div class="col-md-10">
+		  <div class="box">
+		    <div class="box-header">
+              	  <div class="col-md-offset-4"><h3 class="box-title">Add New Client</h3></div><hr>
+	        </div>
+		  	<form method="post" action="{{ route('newClient.store') }}">
             {!! csrf_field() !!}
             <div class="row">
             	<div class="container">
-            		<div class="col-md-4">
+            		<div class="col-md-8">
             			@if (session()->has('successMessage'))
 						<div class="alert alert-success alert-block">
 							<button type="button" class="close" data-dismiss="alert">×</button>	
@@ -369,7 +375,14 @@
 			    </div>
 			</div>
             </form>
-		  
+		  </div><!--box close-->
+		  </div>
+		</section><!--section close-->
+    </div><!--row close-->
+</div><!--container close-->
+</div>
+</div>
+</div>
 <script>
 	function FillBilling(f) {
 	  if(f.billingtoo.checked == true) {
@@ -378,12 +391,7 @@
 	    f.scity.value = f.city.value;
 	  }
 }</script>
-	<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!--modal close-->
 
 <script>
 
@@ -398,39 +406,17 @@
 
 				tax=percentList.percent;
 
-				var client_id=$("#client").find( "option:selected" ).prop("value");
-				var product_id=$("#product").find( "option:selected" ).prop("value");
-				$.get('/getSqFeetRate?client_id='+client_id+'&product_id='+product_id,function(data){
-					$.each(data,function(index,sqFeetRate){
-
-						
-						rate=sqFeetRate.sq_feet_rate;
-						
-						
-					});
-
-					
-				});
-
 				var sq = $('#sq_feet').val();
 		    	var r=parseFloat(rate);
 		    	var sq=parseFloat(sq);
 		    	var t=parseFloat(tax);
 		    	var x=sq*r*(t)/100;
-		    	//alert(" sq+"+sq+" r="+r+" t+"+t+" x="+x);
 		   		$('#sq_feet_rate').val(r+x);
 
 				
-
-				
 			});
-			//alert(tax);
 			
 		});
-		
-		
-
-		
 
 	});
 
@@ -447,68 +433,20 @@
 				t=t+parseFloat(total[i]);
 			return t;
 	}
-
-
-	function getSqFeetRate(client_id,product_id){
-
-		var rate1;
-		$.ajax({ url: '/getSqFeetRate?client_id='+client_id+'&product_id='+product_id, 
-         async: false,
-         type : 'GET',
-         success: function(data) {
-
-      		  var rate=data[0]['sq_feet_rate'];
-			  //alert("get "+rate+" 2nd");
-			  //alert("dsfd"+rate);
-			  rate1=rate;
-
-            }
-        });
-
-        
-        return rate1;
-	
-	}
-	
-
 	function price_update(){
-		
-		$('#myTable').find('tr').click( function(){
-				
-				//alert(0);
-				var client_id=$("#client").find( "option:selected" ).prop("value");
-				var product_id=$(this).find('td:nth-child(2)').attr('value');
-				var sf=$(this).find('td:nth-child(3) input').val();
-				rate=getSqFeetRate(client_id,product_id);
-				//alert(rate);
-				s=parseFloat(sf);
-			    r=parseFloat(rate);
-			    t=parseFloat(tax);
-			    x=s*r*(t)/100;
-				//alert(r+","+s+" 1st ");
-				$(this).find('td:nth-child(6)').text(s*r+x);
-				$(this).find('td:nth-child(6)').attr('value',s*r+x);
-				$('#total').text("Total: "+find_total().toFixed(2));
-		
-		});
 
-		$('#myTable').find('tr').keyup( function(){
-				
-				//alert(0);
-				var client_id=$("#client").find( "option:selected" ).prop("value");
-				var product_id=$(this).find('td:nth-child(2)').attr('value');
-				var sf=$(this).find('td:nth-child(3) input').val();
-				rate=getSqFeetRate(client_id,product_id);
-				//alert(rate);
-				s=parseFloat(sf);
-			    r=parseFloat(rate);
-			    t=parseFloat(tax);
-			    x=s*r*(t)/100;
-				//alert(r+","+s+" 1st ");
-				$(this).find('td:nth-child(6)').text(s*r+x);
-				$(this).find('td:nth-child(6)').attr('value',s*r+x);
-				$('#total').text("Total: "+find_total().toFixed(2));
-		
+		$('#myTable').find('tr').click( function(){
+		  
+		  var sf=$(this).find('td:nth-child(3) input').val();
+		  var s=parseFloat(sf);
+		  var r=parseFloat(rate);
+		  var t=parseFloat(tax);
+		  var x=s*r*(t)/100;
+		 
+		  $(this).find('td:nth-child(6)').text(r+x);
+		  $(this).find('td:nth-child(6)').attr('value',r+x);
+		  $('#total').text("Total: "+find_total().toFixed(2));
+
 		});
 	}
 
@@ -553,30 +491,16 @@
 
 
 	$('#sq_feet').on("input", function() {
-
-		var client_id=$("#client").find( "option:selected" ).prop("value");
-		var product_id=$("#product").find( "option:selected" ).prop("value");
-		$.get('/getSqFeetRate?client_id='+client_id+'&product_id='+product_id,function(data){
-			$.each(data,function(index,sqFeetRate){
-
-				
-				rate=sqFeetRate.sq_feet_rate;
-				
-				
-			});
-
-			
-		});
     	var dInput = this.value;
     	var r=parseInt(rate);
     	var di=parseInt(dInput);
     	var t=parseInt(tax);
     	var x=di*r*(t)/100;
-   		$('#sq_feet_rate').val(di*r+x);
+   		$('#sq_feet_rate').val(r+x);
 	});
 
 
-var orders = Array(); 
+var orders = Array();	
 
 	$(document).ready(function(){
 
@@ -599,7 +523,7 @@ var orders = Array();
 			    	$("#dynamicBox").show();
 
 			    	$("#myTable").append('<tr><td value="'+$("#client option:selected").val()+'">'+$("#client option:selected").text()+'</td> <td value="'+$("#product option:selected").val()+'">'+$("#product option:selected").text()+'</td> <td value="'+$("#sq_feet").val()+'"><input type="number" onclick="price_update();" value="'+$("#sq_feet").val()+'"></td> <td value="'+$("#tax option:selected").val()+'">'+$("#tax option:selected").text()+'</td> <td value="'+$("#date").val()+'">'+$("#date").val()+'</td> <td name="price" value="'+$("#sq_feet_rate").val()+'">'+$("#sq_feet_rate").val()+'</td><td><a href="javascript:void(0);" class="remCF"><i class="fa fa-times" aria-hidden="true"></i></a></td> </tr>');
-			    	
+
 				}
 
 				        var grandTotal = 0;
@@ -641,26 +565,15 @@ var orders = Array();
 				x++;
 			});
 
-			
-
-	
-
-		    $.ajax({
-					  type: 'POST',
-					  url: "{{ route('newOrder.store') }}",
-					  data:{  'order': orders,
-		           				'_token': $('meta[name=csrf-token]').attr('content')
-
-		       			},
-		       		dataType:'json',
-					  success: function(data){
-			           	console.log(data);
-			           	window.location.href = "/orderBill/"+data;
-					   
-				    }
-							  
-					  
-					});
+			 $.post("{{ route('newOrder.store') }}", 
+			 	{  order: orders,
+		           '_token': $('meta[name=csrf-token]').attr('content')
+		       },
+	           function(data, status){
+	           	
+	           	window.location.href = "/allOrders";
+			   
+		    });
 
 	       
 	    });

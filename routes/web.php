@@ -37,6 +37,8 @@ Route::resource('updateOrder', 'OrderController');
 Route::resource('removeOrder', 'OrderController');
 Route::get('/orderDetail/{id}', 'OrderController@orderDetail');
 Route::get('/filterByClient/{id}', 'OrderController@filterByClient');
+Route::get('/orderBill/{id}', 'OrderController@orderBill');
+
 
 
 Route::resource('newClient', 'ClientController');
@@ -44,6 +46,7 @@ Route::resource('removeClient', 'ClientController');
 Route::resource('updateClient', 'ClientController');
 Route::get('/newClient', 'ClientController@newClient');
 Route::get('/allClients', 'ClientController@allClients');
+Route::post('/newClientAdd', 'ClientController@newClientAdd');
 
 Route::resource('newProduct', 'ProductController');
 Route::resource('addProduct', 'ProductController');

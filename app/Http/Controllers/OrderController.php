@@ -36,12 +36,15 @@ class OrderController extends Controller
         $clients=Client::all();
         $products=Product::all();
         $taxes=Tax::all();
-        return view('order.newOrder',array('user' => Auth::user(), 'clients' => $clients, 'products' => $products, 'taxes'=> $taxes));
+        $industries=Industry::all();
+        $users=User::all();
+        return view('order.newOrder',array('user' => Auth::user(), 'clients' => $clients, 'products' => $products, 'taxes'=> $taxes,'industries'=>$industries,'users'=>$users));
     }
 
      public function allOrders()
     {
-        $orders=Order::paginate(5);
+        $orders=Order::select('id','order_id','fk_product_id','order_date','fk_client_id','fk_product_id', 'sq_feets','fk_tax_id','estimated_rate','approval')
+                        ->groupBy('order_id')->orderBy('id')->paginate(5);
         $clients=Client::all();
         return view('order.allOrders',array('user' => Auth::user(), 'orders' => $orders, 'clients' => $clients));
     }
@@ -99,6 +102,16 @@ class OrderController extends Controller
 
     }
 
+    public function orderBill($orderNo){
+
+        $orders=Order::where('order_id','=',$orderNo)->get();
+        $clientName=Order::where('order_id','=',$orderNo) ->select('fk_client_id') ->get()->first();
+           
+        $clients=Client::all();
+        return view('order.orderBill',array('user' => Auth::user(), 'orders' => $orders, 'clientName' => $clientName));
+
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -109,12 +122,17 @@ class OrderController extends Controller
         //
     }
 
-    public function getApproved($id){
-        if(Entrust::hasRole('admin')){
-            $order=Order::find($id);
-            $order->approval=2;
-            $order->save();
+    public function getApproved($order_id){
+        if(Entrust::hasRole('manager')){
+            $orders=Order::where('order_id','=',$order_id)->get();
+        
+            foreach($orders as $order){
+                $order->approval=2;
+                $order->save();
+                
+            }
             return back();
+            
         }
         else{
             return back();
@@ -124,12 +142,14 @@ class OrderController extends Controller
 
     }
 
-    public function approve($id){
+    public function approve($order_id){
         if(Entrust::hasRole('admin')){
-            $order=Order::find($id);
-            $order->approval=1;
-            $order->save();
-            return back();
+            $orders=Order::where('order_id','=',$order_id)->get();
+            foreach($orders as $order){
+                $order->approval=1;
+                $order->save();
+                return back();
+            }
         }
 
         else{
@@ -172,36 +192,34 @@ class OrderController extends Controller
                     $orderNo=$orderNo+1;
                     
                 }
-                                
+                              
                            
                 foreach($orders as $order){
-                    $newOrder=new Order;
-                    
-                   $newOrder->order_id="MK-00".$orderNo;
-                    if($order['0']==0){
-                        $newOrder->fk_client_id=null;
-                    }
-                    else{
-                        $newOrder->fk_client_id=$order['0'];
-                    }
-                    
-                    $newOrder->fk_product_id=$order['1'];
-                    $newOrder->sq_feets=$order['2'];
-                    $newOrder->fk_tax_id=1;
-                    $newOrder->estimated_rate=$order['3']*$order['2'];
-                    if(Auth::user()->hasRole('admin')){
-                        $newOrder->approval=1;
-                    }
-                    else{
-                        $newOrder->approval=0;
-                    }
-                    $newOrder->fk_user_created_id=Auth::user()->id;
-                    $newOrder->save();
+                    try{$newOrder=new Order;  
+                            $newOrder->order_id="MK-00".$orderNo;
+                            $newOrder->fk_client_id=$order['0'];
+                            $newOrder->fk_product_id=$order['1'];
+                            $newOrder->sq_feets=$order['2'];
+                            $newOrder->fk_tax_id=$order['3'];
+                            $newOrder->order_date=$order['4'];
+        
+                            $newOrder->estimated_rate=$order['5'];
+                            if(Auth::user()->hasRole('admin')){
+                                $newOrder->approval=1;
+                            }
+                            else{
+                                $newOrder->approval=0;
+                            }
+                            $newOrder->fk_user_created_id=Auth::user()->id;
+                            $newOrder->save();  
+                        }
+                        catch(\Exception $e){
+                            
+                        }
+                        
                 }
-                 
-       
-       
-
+                $orderDetail="MK-00".$orderNo;
+                return \Response::json($orderDetail); 
 
     }
 
